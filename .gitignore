@@ -34,3 +34,9 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# vscode
+.vscode/
+
+# ESLint / Prettier
+.eslintcache
