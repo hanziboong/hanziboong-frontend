@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     minHeight: '50%',
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   item: {
@@ -102,9 +102,9 @@ export default function DetailModal({
         {/* Pressable 전체 눌림 방지용 */}
         <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
           <View style={styles.header}>
-            <Text style={styles.title}>{date} 일정</Text>
+            <Text style={styles.title}>{dayjs(date).format('M월 D일')} 일정</Text>
             <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={20} color="black" />
+              <Ionicons name="close" size={24} color="black" />
             </TouchableOpacity>
           </View>
           <FlatList
