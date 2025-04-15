@@ -1,60 +1,74 @@
 // CalendarScreen.tsx
 import { View } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import { Calendar, DateData } from 'react-native-calendars';
+import FloatingAddButton from '../components/calendar/FloatingAddButton';
 import { useState } from 'react';
-
-const mockSchedules = [
-  { id: '1', date: '2025-04-01', title: '분리수거', color: '#f8d7da' },
-  { id: '2', date: '2025-04-01', title: '회의', color: '#d6d8fb' },
-  { id: '3', date: '2025-04-02', title: '출장', color: '#d4edda' },
-];
-
-interface DayData {
-  dateString: string;
-  day: number;
-  month: number;
-  year: number;
-  timestamp: number;
-}
+import DetailModal from '@/components/calendar/DetailModal';
+import buildMarkedDatesFromSchedules from '@/hook/markedDatesFromSchedules';
 
 export default function CalendarScreen() {
+  const [detailVisible, setDetailVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
 
-  const handleDayPress = (day: DayData) => {
-    setSelectedDate(day.dateString);
-    setModalVisible(true);
-  };
-
-  const markedDates = mockSchedules.reduce(
-    (acc, cur) => {
-      if (!acc[cur.date]) {
-        acc[cur.date] = { marked: true, dots: [] };
-      }
-      acc[cur.date].dots.push({ color: cur.color });
-      return acc;
+  const mockSchedules = [
+    {
+      id: '1',
+      title: '일정 1',
+      start: '2025-04-15',
+      end: '2025-04-16',
+      color: '#5f9ea0',
     },
-    {} as Record<string, { marked: boolean; dots: { color: string }[] }>,
-  );
+    {
+      id: '2',
+      title: '일정 2',
+      start: '2025-04-16',
+      end: '2025-04-17',
+      color: '#ffa500',
+    },
+  ];
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <Calendar
-        onDayPress={handleDayPress}
-        markedDates={markedDates}
-        markingType="period"
+        horizontal
+        pagingEnabled
+        markedDates={buildMarkedDatesFromSchedules(mockSchedules)}
+        markingType="multi-period"
         style={{
           height: 500,
+        }}
+        onDayPress={(day: DateData) => {
+          setSelectedDate(day.dateString);
+          setDetailVisible(true);
         }}
         theme={{
           backgroundColor: '#ffffff',
           calendarBackground: '#ffffff',
-          textSectionTitleColor: '#b6c1cd',
-          selectedDayBackgroundColor: '#00adf5',
+          textSectionTitleColor: '#404040',
+          selectedDayBackgroundColor: '#FFB338',
           selectedDayTextColor: '#ffffff',
-          todayTextColor: '#00adf5',
-          dayTextColor: '#2d4150',
-          textDisabledColor: '#dd99ee',
+          todayTextColor: '#FFB338',
+          arrowColor: '#FFB338',
+          dotColor: '#FFB338',
+          'stylesheet.calendar.header': {
+            dayTextAtIndex0: {
+              color: 'red',
+            },
+            dayTextAtIndex6: {
+              color: 'blue',
+            },
+          },
+        }}
+      />
+      <FloatingAddButton onPress={() => {}} />
+      <DetailModal
+        visible={detailVisible}
+        date={selectedDate}
+        schedules={mockSchedules}
+        onClose={() => setDetailVisible(false)}
+        onAddPress={() => {
+          setFormVisible(true);
         }}
       />
     </View>
