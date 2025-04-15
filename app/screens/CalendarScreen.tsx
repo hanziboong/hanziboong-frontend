@@ -5,11 +5,13 @@ import FloatingAddButton from '../components/calendar/FloatingAddButton';
 import { useState } from 'react';
 import DetailModal from '@/components/calendar/DetailModal';
 import buildMarkedDatesFromSchedules from '@/hook/markedDatesFromSchedules';
+import ScheduleFormModal from '@/components/calendar/ScheduleFormModal';
+import dayjs from 'dayjs';
 
 export default function CalendarScreen() {
   const [detailVisible, setDetailVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('');
   const [formVisible, setFormVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
 
   const mockSchedules = [
     {
@@ -61,15 +63,29 @@ export default function CalendarScreen() {
           },
         }}
       />
-      <FloatingAddButton onPress={() => {}} />
+      <FloatingAddButton
+        onPress={() => {
+          setFormVisible(true);
+        }}
+      />
       <DetailModal
         visible={detailVisible}
         date={selectedDate}
         schedules={mockSchedules}
         onClose={() => setDetailVisible(false)}
         onAddPress={() => {
-          setFormVisible(true);
+          setDetailVisible(false);
+          setTimeout(() => {
+            setFormVisible(true);
+          }, 100);
         }}
+      />
+      <ScheduleFormModal
+        visible={formVisible}
+        date={selectedDate}
+        onClose={() => setFormVisible(false)}
+        // TODO : 제출 로직 추가 필요
+        onSubmit={() => {}}
       />
     </View>
   );
