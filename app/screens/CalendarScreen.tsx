@@ -6,7 +6,6 @@ import { useState } from 'react';
 import DetailModal from '@/components/calendar/DetailModal';
 import buildMarkedDatesFromSchedules from '@/hook/markedDatesFromSchedules';
 import ScheduleFormModal from '@/components/calendar/ScheduleFormModal';
-import dayjs from 'dayjs';
 
 export default function CalendarScreen() {
   const [detailVisible, setDetailVisible] = useState(false);
