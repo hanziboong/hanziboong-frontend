@@ -6,6 +6,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Rule } from '@/types/Rule';
 import { RootStackParamList } from '@/types/navigation';
 import styles from './RulesScreen.styles';
+import ManageRuleModal from '@/components/rules/modal/ManageRuleModal';
 
 export default function RulesScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -32,19 +33,12 @@ export default function RulesScreen() {
     },
   ]);
 
+  const [manageModalVisible, setManageModalVisible] = useState(false);
+  const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
+
   const handlePressMore = (rule: Rule) => {
-    Alert.alert('규칙 관리', `${rule.title}에 대해 어떤 작업을 하시겠습니까?`, [
-      {
-        text: '수정',
-        onPress: () => navigation.navigate('RuleFormScreen', { mode: 'edit', rule }),
-      },
-      {
-        text: '삭제',
-        style: 'destructive',
-        onPress: () => setRules((prev) => prev.filter((r) => r.id !== rule.id)),
-      },
-      { text: '취소', style: 'cancel' },
-    ]);
+    setSelectedRule(rule);
+    setManageModalVisible(true);
   };
 
   const handlePressAlarm = (rule: Rule) => {
@@ -84,6 +78,21 @@ export default function RulesScreen() {
         )}
         ListEmptyComponent={<Text style={styles.emptyText}>규칙이 없습니다.</Text>}
       />
+      {selectedRule && (
+        <ManageRuleModal
+          visible={manageModalVisible}
+          ruleTitle={selectedRule.title}
+          onEdit={() => {
+            setManageModalVisible(false);
+            navigation.navigate('RuleFormScreen', { mode: 'edit', rule: selectedRule });
+          }}
+          onDelete={() => {
+            setRules((prev) => prev.filter((r) => r.id !== selectedRule.id));
+            setManageModalVisible(false);
+          }}
+          onClose={() => setManageModalVisible(false)}
+        />
+      )}
     </View>
   );
 }
