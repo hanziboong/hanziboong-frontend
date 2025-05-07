@@ -1,43 +1,39 @@
 // screens/RulesScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Rule } from '@/types/Rule';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/types/navigation';
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'white', padding: 16 },
-  ruleItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomColor: '#ddd',
-    borderBottomWidth: 1,
-  },
-  title: { fontSize: 16, fontWeight: 'bold' },
-  description: { fontSize: 14, color: '#666', marginTop: 4 },
-  icon: { padding: 8 },
-  addButton: {
-    position: 'absolute',
-    bottom: 30,
-    right: 20,
-    backgroundColor: '#FFB338',
-    borderRadius: 50,
-    padding: 14,
-  },
-});
+import styles from './RulesScreen.styles';
 
 export default function RulesScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [rules, setRules] = useState<Rule[]>([
-    { id: '1', title: '휴대폰 사용 금지', description: '회의 중 휴대폰을 사용하지 않습니다.' },
-    { id: '2', title: '지각 금지', description: '모임에 늦지 않도록 합니다.' },
+    {
+      id: '1',
+      title: '밤 11시 이후에는 불 끄기',
+      description: '개인 방은 상관없음!',
+    },
+    {
+      id: '2',
+      title: '집 비우기 최소 이틀 전에는 한지붕에 일정 등록하고 카톡방에도 말해주기',
+      description: '',
+    },
+    {
+      id: '3',
+      title: '집에 누구 초대하고 싶으면 룸메랑 상의하고 초대하기',
+      description: '단, 이성은 이유불문 초대 불가',
+    },
+    {
+      id: '4',
+      title: '분리수거는 번갈아가면서 하기',
+      description: '매달 1, 3주 - 현지\n매달 2, 4주 - 은혜\n5주차 이후 - 둘이 상의해서 정하기',
+    },
   ]);
 
   const handlePressMore = (rule: Rule) => {
-    Alert.alert('규칙 관리', `"${rule.title}"에 대해 어떤 작업을 하시겠습니까?`, [
+    Alert.alert('규칙 관리', `${rule.title}에 대해 어떤 작업을 하시겠습니까?`, [
       {
         text: '수정',
         onPress: () => navigation.navigate('RuleFormScreen', { mode: 'edit', rule }),
@@ -52,38 +48,42 @@ export default function RulesScreen() {
   };
 
   const handlePressAlarm = (rule: Rule) => {
-    Alert.alert('알림', `"${rule.title}" 규칙에 대한 푸시 알림이 발송됩니다.`);
+    Alert.alert('알림', `${rule.title} 규칙에 대한 푸시 알림이 발송됩니다.`);
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.addButtonContainer}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate('RuleFormScreen', { mode: 'add' })}
+        >
+          <Text style={styles.addButtonText}>규칙추가하기</Text>
+        </TouchableOpacity>
+      </View>
+
       <FlatList
         data={rules}
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => (
-          <View style={styles.ruleItem}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.title}>{`${index + 1}. ${item.title}`}</Text>
-              <Text style={styles.description}>{item.description}</Text>
+          <View style={styles.card}>
+            <View style={styles.row}>
+              <Text style={styles.index}>{index + 1}</Text>
+              <View style={styles.content}>
+                <Text style={styles.title}>{item.title}</Text>
+                {!!item.description && <Text style={styles.description}>{item.description}</Text>}
+              </View>
+              <TouchableOpacity onPress={() => handlePressAlarm(item)} style={styles.icon}>
+                <Ionicons name="notifications-outline" size={20} color="gray" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handlePressMore(item)} style={styles.icon}>
+                <Ionicons name="ellipsis-vertical" size={20} color="gray" />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => handlePressAlarm(item)} style={styles.icon}>
-              <Ionicons name="notifications-outline" size={20} color="gray" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handlePressMore(item)} style={styles.icon}>
-              <Ionicons name="ellipsis-vertical" size={20} color="gray" />
-            </TouchableOpacity>
           </View>
         )}
-        ListEmptyComponent={
-          <Text style={{ textAlign: 'center', marginTop: 20 }}>규칙이 없습니다.</Text>
-        }
+        ListEmptyComponent={<Text style={styles.emptyText}>규칙이 없습니다.</Text>}
       />
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate('RuleFormScreen', { mode: 'add' })}
-      >
-        <Ionicons name="add" size={28} color="white" />
-      </TouchableOpacity>
     </View>
   );
 }

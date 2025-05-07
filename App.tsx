@@ -19,7 +19,7 @@ export default function App() {
         <Stack.Screen
           name="RuleFormScreen"
           component={RuleFormScreen}
-          options={{ title: '규칙 관리' }}
+          options={{ title: '공동규칙 관리' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

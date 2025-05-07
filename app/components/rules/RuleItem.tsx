@@ -1,11 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons, Entypo } from '@expo/vector-icons';
-
-type Rule = {
-  id: string;
-  title: string;
-  description: string;
-};
+import { Rule } from '@/types/Rule';
 
 interface RuleItemProps {
   index: number;
