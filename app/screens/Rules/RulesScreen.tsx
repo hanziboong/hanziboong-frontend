@@ -7,6 +7,8 @@ import { Rule } from '@/types/Rule';
 import { RootStackParamList } from '@/types/navigation';
 import styles from './RulesScreen.styles';
 import ManageRuleModal from '@/components/rules/modal/ManageRuleModal';
+import SelectPersonModal from '@/components/rules/modal/SelectPersonModal';
+import ConfirmNotificationModal from '@/components/rules/modal/ConfirmNotificationModal';
 
 export default function RulesScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -35,14 +37,20 @@ export default function RulesScreen() {
 
   const [manageModalVisible, setManageModalVisible] = useState(false);
   const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
+  const [alarmModalVisible, setAlarmModalVisible] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
+  // 더보기 버튼을 눌렀을 때
   const handlePressMore = (rule: Rule) => {
     setSelectedRule(rule);
     setManageModalVisible(true);
   };
 
+  // 알림 버튼을 눌렀을 때
   const handlePressAlarm = (rule: Rule) => {
-    Alert.alert('알림', `${rule.title} 규칙에 대한 푸시 알림이 발송됩니다.`);
+    setSelectedRule(rule);
+    setAlarmModalVisible(true);
   };
 
   return (
@@ -93,6 +101,26 @@ export default function RulesScreen() {
           onClose={() => setManageModalVisible(false)}
         />
       )}
+
+      <SelectPersonModal
+        visible={alarmModalVisible}
+        onClose={() => setAlarmModalVisible(false)}
+        onSelect={(person) => {
+          setSelectedPerson(person);
+          setAlarmModalVisible(false);
+          setConfirmVisible(true);
+        }}
+      />
+
+      <ConfirmNotificationModal
+        visible={confirmVisible}
+        name={selectedPerson || ''}
+        onCancel={() => setConfirmVisible(false)}
+        onConfirm={() => {
+          setConfirmVisible(false);
+          Alert.alert(`${selectedPerson}님에게 알림을 보냈습니다.`);
+        }}
+      />
     </View>
   );
 }
