@@ -9,32 +9,11 @@ import styles from './RulesScreen.styles';
 import ManageRuleModal from '@/components/rules/modal/ManageRuleModal';
 import SelectPersonModal from '@/components/rules/modal/SelectPersonModal';
 import ConfirmNotificationModal from '@/components/rules/modal/ConfirmNotificationModal';
+import { useRules } from '@/hook/useRules';
 
 export default function RulesScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [rules, setRules] = useState<Rule[]>([
-    {
-      id: '1',
-      title: '밤 11시 이후에는 불 끄기',
-      description: '개인 방은 상관없음!',
-    },
-    {
-      id: '2',
-      title: '집 비우기 최소 이틀 전에는 한지붕에 일정 등록하고 카톡방에도 말해주기',
-      description: '',
-    },
-    {
-      id: '3',
-      title: '집에 누구 초대하고 싶으면 룸메랑 상의하고 초대하기',
-      description: '단, 이성은 이유불문 초대 불가',
-    },
-    {
-      id: '4',
-      title: '분리수거는 번갈아가면서 하기',
-      description: '매달 1, 3주 - 현지\n매달 2, 4주 - 은혜\n5주차 이후 - 둘이 상의해서 정하기',
-    },
-  ]);
-
+  const { data: rules, isLoading, error } = useRules();
   const [manageModalVisible, setManageModalVisible] = useState(false);
   const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
   const [alarmModalVisible, setAlarmModalVisible] = useState(false);
@@ -95,7 +74,6 @@ export default function RulesScreen() {
             navigation.navigate('RuleFormScreen', { mode: 'edit', rule: selectedRule });
           }}
           onDelete={() => {
-            setRules((prev) => prev.filter((r) => r.id !== selectedRule.id));
             setManageModalVisible(false);
           }}
           onClose={() => setManageModalVisible(false)}
@@ -121,6 +99,9 @@ export default function RulesScreen() {
           Alert.alert(`${selectedPerson}님에게 알림을 보냈습니다.`);
         }}
       />
+
+      {isLoading && <Text>Loading...</Text>}
+      {error && <Text>Error: {error.message}</Text>}
     </View>
   );
 }

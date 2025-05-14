@@ -1,5 +1,5 @@
 export interface Rule {
-  id: string;
   title: string;
   description: string;
+  memberId: number;
 }

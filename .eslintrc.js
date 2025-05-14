@@ -39,5 +39,6 @@ module.exports = {
     'import/no-named-as-default-member': 'off',
     'import/no-useless-path-segments': 'off',
     'react/require-default-props': 'off',
+    'react/no-unstable-nested-components': ['warn', { allowAsProps: true }],
   },
 };

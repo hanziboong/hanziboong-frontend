@@ -1,48 +1,47 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import { View, TextInput } from 'react-native';
+import styles from './RuleForm.styles';
+import { Rule } from '@/types/Rule';
 
 interface RuleFormProps {
-  isEdit: boolean;
-  defaultValues?: { id: string; title: string; description: string };
-  onSubmit?: (rule: { title: string; description: string }) => void;
+  defaultValues?: Rule;
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  input: {
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 16,
-    fontSize: 16,
-  },
-});
+// 외부 컴포넌트로 값을 옮기기 위함
+export type RuleFormRef = {
+  getValues: () => { title: string; description: string };
+};
 
-export default function RuleForm({ isEdit, defaultValues, onSubmit }: RuleFormProps) {
+const RuleForm = forwardRef<RuleFormRef, RuleFormProps>(({ defaultValues }, ref) => {
   const [title, setTitle] = useState(defaultValues?.title ?? '');
   const [description, setDescription] = useState(defaultValues?.description ?? '');
 
-  const handleSubmit = () => {
-    if (onSubmit) {
-      onSubmit({ title, description });
-    }
-  };
+  useImperativeHandle(ref, () => ({
+    getValues: () => ({
+      title,
+      description,
+    }),
+  }));
 
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="규칙 제목"
+        placeholder="규칙 제목을 입력하세요"
         value={title}
         onChangeText={setTitle}
         style={styles.input}
       />
       <TextInput
-        placeholder="설명"
+        placeholder="규칙의 설명을 입력하세요"
         value={description}
         onChangeText={setDescription}
         multiline
         style={[styles.input, { height: 100 }]}
       />
-      <Button title={isEdit ? '수정하기' : '추가하기'} onPress={handleSubmit} />
     </View>
   );
-}
+});
+
+RuleForm.displayName = 'RuleForm';
+
+export default RuleForm;
