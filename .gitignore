@@ -40,3 +40,8 @@ yarn-error.*
 
 # ESLint / Prettier
 .eslintcache
+
+# env
+.env
+.env.development
+.env.production
