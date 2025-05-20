@@ -10,6 +10,7 @@ import ManageRuleModal from '@/components/rules/modal/ManageRuleModal';
 import SelectPersonModal from '@/components/rules/modal/SelectPersonModal';
 import ConfirmNotificationModal from '@/components/rules/modal/ConfirmNotificationModal';
 import { useRules, useDeleteRule } from '@/hook/useRules';
+import ConfirmModal from '@/components/rules/modal/ConfirmModal';
 
 export default function RulesScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -20,6 +21,10 @@ export default function RulesScreen() {
   const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
+
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
+
   const deleteRule = useDeleteRule();
   // 더보기 버튼을 눌렀을 때
   const handlePressMore = (rule: Rule) => {
@@ -33,12 +38,6 @@ export default function RulesScreen() {
     setAlarmModalVisible(true);
   };
 
-  // 삭제 버튼을 눌렀을 때
-  const handlePressDelete = (rule: Rule) => {
-    setSelectedRule(rule);
-    setDeleteConfirmVisible(true);
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.addButtonContainer}>
@@ -49,7 +48,6 @@ export default function RulesScreen() {
           <Text style={styles.addButtonText}>규칙추가하기</Text>
         </TouchableOpacity>
       </View>
-
       <FlatList
         data={rules}
         keyExtractor={(item) => item.id}
@@ -82,11 +80,11 @@ export default function RulesScreen() {
           }}
           onDelete={() => {
             setManageModalVisible(false);
+            setDeleteConfirmVisible(true);
           }}
           onClose={() => setManageModalVisible(false)}
         />
       )}
-
       <SelectPersonModal
         visible={alarmModalVisible}
         onClose={() => setAlarmModalVisible(false)}
@@ -96,7 +94,6 @@ export default function RulesScreen() {
           setConfirmVisible(true);
         }}
       />
-
       <ConfirmNotificationModal
         type="alarm"
         visible={confirmVisible}
@@ -104,10 +101,9 @@ export default function RulesScreen() {
         onCancel={() => setConfirmVisible(false)}
         onConfirm={() => {
           setConfirmVisible(false);
-          Alert.alert(`${selectedPerson}님에게 알림을 보냈습니다.`);
+          setConfirmModalVisible(true);
         }}
       />
-
       <ConfirmNotificationModal
         type="delete"
         visible={deleteConfirmVisible}
@@ -116,10 +112,19 @@ export default function RulesScreen() {
         onConfirm={() => {
           setDeleteConfirmVisible(false);
           deleteRule.mutate(selectedRule?.id ?? 0);
-          Alert.alert(`${selectedRule?.title} 규칙을 삭제했습니다.`);
+          setConfirmDeleteVisible(true);
         }}
       />
-
+      <ConfirmModal
+        text={`${selectedPerson}님에게 알림을 보냈습니다.`}
+        visible={confirmModalVisible}
+        onCancel={() => setConfirmModalVisible(false)}
+      />
+      <ConfirmModal
+        text={`${selectedRule?.title} 규칙을 삭제했습니다.`}
+        visible={confirmDeleteVisible}
+        onCancel={() => setConfirmDeleteVisible(false)}
+      />
       {isLoading && <Text>Loading...</Text>}
       {error && <Text>Error: {error.message}</Text>}
     </View>
