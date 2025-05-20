@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
 import RuleForm, { RuleFormRef } from '@/components/rules/RuleForm';
-import { useCreateRule } from '@/hook/useRules';
+import { useCreateRule, useUpdateRule } from '@/hook/useRules';
 
 function HeaderRight({ onPress, label }: { onPress: () => void; label: string }) {
   return (
@@ -33,15 +33,25 @@ export default function RuleFormScreen() {
   const isEdit = route.params?.mode === 'edit';
   const formRef = useRef<RuleFormRef>(null);
   const createRule = useCreateRule();
+  const updateRule = useUpdateRule();
 
   const handleSubmit = useCallback(() => {
     const values = formRef.current?.getValues();
     if (!values) return;
 
-    console.log('제출 값:', values);
     // TODO: 회원 아이디 나중에 추가
-    createRule.mutate({ ...values, memberId: 1 });
-  }, [createRule]);
+    if (isEdit) {
+      updateRule.mutate(
+        { ...values, id: route.params?.rule?.id ?? 0, memberId: 1 },
+        { onSuccess: () => navigation.goBack() },
+      );
+    } else {
+      createRule.mutate(
+        { ...values, id: 0, memberId: 1 },
+        { onSuccess: () => navigation.goBack() },
+      );
+    }
+  }, [createRule, updateRule, route.params?.rule?.id, isEdit, navigation]);
 
   useLayoutEffect(() => {
     navigation.setOptions({

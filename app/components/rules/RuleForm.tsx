@@ -29,14 +29,14 @@ const RuleForm = forwardRef<RuleFormRef, RuleFormProps>(({ defaultValues }, ref)
         placeholder="규칙 제목을 입력하세요"
         value={title}
         onChangeText={setTitle}
-        style={styles.input}
+        style={styles.title}
       />
       <TextInput
         placeholder="규칙의 설명을 입력하세요"
         value={description}
         onChangeText={setDescription}
         multiline
-        style={[styles.input, { height: 100 }]}
+        style={styles.description}
       />
     </View>
   );

@@ -21,7 +21,7 @@ export const updateRule = async (rule: Rule) => {
 };
 
 // 규칙 삭제
-export const deleteRule = async (rule: Rule) => {
-  const response = await instance.delete(`/api/rules/${rule.id}`);
+export const deleteRule = async (id: number) => {
+  const response = await instance.delete(`/api/rules/${id}`);
   return response.data;
 };
