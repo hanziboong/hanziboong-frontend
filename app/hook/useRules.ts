@@ -13,6 +13,7 @@ export const useRules = () =>
       return data.content;
     },
   });
+
 // 규칙 생성
 export const useCreateRule = () => {
   const queryClient = useQueryClient();
@@ -20,6 +21,28 @@ export const useCreateRule = () => {
     mutationFn: ruleApi.createRules,
     onSuccess: () => {
       // 캐시 무효화 → 자동 재조회
+      queryClient.invalidateQueries({ queryKey: ['rules'] });
+    },
+  });
+};
+
+// 규칙 수정
+export const useUpdateRule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ruleApi.updateRule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rules'] });
+    },
+  });
+};
+
+// 규칙 삭제
+export const useDeleteRule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ruleApi.deleteRule,
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rules'] });
     },
   });

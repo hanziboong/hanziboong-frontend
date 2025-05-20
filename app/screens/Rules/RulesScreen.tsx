@@ -9,7 +9,7 @@ import styles from './RulesScreen.styles';
 import ManageRuleModal from '@/components/rules/modal/ManageRuleModal';
 import SelectPersonModal from '@/components/rules/modal/SelectPersonModal';
 import ConfirmNotificationModal from '@/components/rules/modal/ConfirmNotificationModal';
-import { useRules } from '@/hook/useRules';
+import { useRules, useDeleteRule } from '@/hook/useRules';
 
 export default function RulesScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -19,7 +19,8 @@ export default function RulesScreen() {
   const [alarmModalVisible, setAlarmModalVisible] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
   const [confirmVisible, setConfirmVisible] = useState(false);
-
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
+  const deleteRule = useDeleteRule();
   // 더보기 버튼을 눌렀을 때
   const handlePressMore = (rule: Rule) => {
     setSelectedRule(rule);
@@ -30,6 +31,12 @@ export default function RulesScreen() {
   const handlePressAlarm = (rule: Rule) => {
     setSelectedRule(rule);
     setAlarmModalVisible(true);
+  };
+
+  // 삭제 버튼을 눌렀을 때
+  const handlePressDelete = (rule: Rule) => {
+    setSelectedRule(rule);
+    setDeleteConfirmVisible(true);
   };
 
   return (
@@ -91,12 +98,25 @@ export default function RulesScreen() {
       />
 
       <ConfirmNotificationModal
+        type="alarm"
         visible={confirmVisible}
         name={selectedPerson || ''}
         onCancel={() => setConfirmVisible(false)}
         onConfirm={() => {
           setConfirmVisible(false);
           Alert.alert(`${selectedPerson}님에게 알림을 보냈습니다.`);
+        }}
+      />
+
+      <ConfirmNotificationModal
+        type="delete"
+        visible={deleteConfirmVisible}
+        name={selectedRule?.title || ''}
+        onCancel={() => setDeleteConfirmVisible(false)}
+        onConfirm={() => {
+          setDeleteConfirmVisible(false);
+          deleteRule.mutate(selectedRule?.id ?? 0);
+          Alert.alert(`${selectedRule?.title} 규칙을 삭제했습니다.`);
         }}
       />
 
