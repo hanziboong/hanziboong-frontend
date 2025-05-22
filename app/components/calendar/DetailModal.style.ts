@@ -1,18 +1,23 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    marginBottom: 12,
+  },
   overlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.3)',
   },
+
   sheet: {
     backgroundColor: '#fff',
-    padding: 20,
+    width: '85%',
+    height: '50%',
     borderRadius: 12,
-    width: '80%',
-    minHeight: '50%',
+    padding: 24,
   },
   title: {
     fontSize: 18,
@@ -41,6 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
+
   scheduleItem: {
     flexDirection: 'row',
     alignItems: 'center',

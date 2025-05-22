@@ -25,7 +25,7 @@ export default function DetailModal({
   return (
     <Modal visible={visible} transparent animationType="fade">
       <Pressable style={styles.overlay} onPress={onClose}>
-        <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
+        <View style={styles.sheet}>
           <View style={styles.header}>
             <Text style={styles.title}>{dayjs(date).format('M월 D일')} 일정</Text>
             <TouchableOpacity onPress={onClose}>
@@ -33,29 +33,32 @@ export default function DetailModal({
             </TouchableOpacity>
           </View>
 
-          <FlatList
-            data={schedules}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.scheduleItem}>
-                <View style={[styles.colorDot, { backgroundColor: item.color }]} />
-                <View style={styles.scheduleTextBox}>
-                  <Text style={styles.scheduleTitle}>{item.title}</Text>
-                  <Text style={styles.scheduleDate}>
-                    {dayjs(item.startAt).format('M월 D일')} ~ {dayjs(item.endAt).format('M월 D일')}
-                  </Text>
+          <View style={styles.body}>
+            <FlatList
+              data={schedules}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.scheduleItem}>
+                  <View style={[styles.colorDot, { backgroundColor: item.color }]} />
+                  <View style={styles.scheduleTextBox}>
+                    <Text style={styles.scheduleTitle}>{item.title}</Text>
+                    <Text style={styles.scheduleDate}>
+                      {dayjs(item.startAt).format('M월 D일')} ~{' '}
+                      {dayjs(item.endAt).format('M월 D일')}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            )}
-            ListEmptyComponent={
-              <Text style={{ color: '#999', textAlign: 'center', marginTop: 8 }}>
-                일정이 없습니다.
-              </Text>
-            }
-          />
+              )}
+              ListEmptyComponent={
+                <Text style={{ color: '#999', textAlign: 'center', marginTop: 8 }}>
+                  일정이 없습니다.
+                </Text>
+              }
+            />
+          </View>
 
           <FloatingAddButton onPress={onAddPress} />
-        </Pressable>
+        </View>
       </Pressable>
     </Modal>
   );
