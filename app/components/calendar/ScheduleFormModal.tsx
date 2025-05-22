@@ -78,8 +78,8 @@ export default function ScheduleFormModal({
     const schedule = {
       houseId: 1, // TODO: 홈 아이디 추가
       title,
-      startAt: dayjs(start).toISOString(),
-      endAt: dayjs(end).toISOString(),
+      startAt: dayjs(start),
+      endAt: dayjs(end),
       participantUserId: selectedIds,
     };
     createSchedule.mutate(schedule);

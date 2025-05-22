@@ -1,13 +1,15 @@
 import * as scheduleApi from '@/api/schedule';
-import { Schedule } from '@/types/Schedule';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // 일정 불러오기
-export const useSchedules = () => {
+export const useSchedules = (year: number, month: number) => {
   return useQuery({
-    queryKey: ['schedules'],
-    queryFn: scheduleApi.getSchedules,
+    queryKey: ['schedules', year, month],
+    queryFn: async () => {
+      const data = await scheduleApi.getSchedules(year, month);
+      return data?.content ?? [];
+    },
   });
 };
 

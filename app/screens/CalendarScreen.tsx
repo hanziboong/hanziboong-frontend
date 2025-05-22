@@ -6,35 +6,25 @@ import { useState } from 'react';
 import DetailModal from '@/components/calendar/DetailModal';
 import buildMarkedDatesFromSchedules from '@/hook/markedDatesFromSchedules';
 import ScheduleFormModal from '@/components/calendar/ScheduleFormModal';
+import { useSchedules } from '@/hook/useSchedules';
 
 export default function CalendarScreen() {
   const [detailVisible, setDetailVisible] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    const now = new Date();
+    return { year: now.getFullYear(), month: now.getMonth() + 1 };
+  });
 
-  const mockSchedules = [
-    {
-      id: '1',
-      title: '일정 1',
-      start: '2025-04-15',
-      end: '2025-04-16',
-      color: '#5f9ea0',
-    },
-    {
-      id: '2',
-      title: '일정 2',
-      start: '2025-04-16',
-      end: '2025-04-17',
-      color: '#ffa500',
-    },
-  ];
+  const { data, isLoading, error } = useSchedules(currentMonth.year, currentMonth.month);
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <Calendar
         horizontal
         pagingEnabled
-        markedDates={buildMarkedDatesFromSchedules(mockSchedules)}
+        markedDates={buildMarkedDatesFromSchedules(data ?? [])}
         markingType="multi-period"
         style={{
           height: 500,
@@ -42,6 +32,10 @@ export default function CalendarScreen() {
         onDayPress={(day: DateData) => {
           setSelectedDate(day.dateString);
           setDetailVisible(true);
+        }}
+        onMonthChange={(month: DateData) => {
+          const { year, month: monthValue } = month;
+          setCurrentMonth({ year, month: monthValue });
         }}
         theme={{
           backgroundColor: '#ffffff',
@@ -70,7 +64,7 @@ export default function CalendarScreen() {
       <DetailModal
         visible={detailVisible}
         date={selectedDate}
-        schedules={mockSchedules}
+        schedules={data ?? []}
         onClose={() => setDetailVisible(false)}
         onAddPress={() => {
           setDetailVisible(false);
