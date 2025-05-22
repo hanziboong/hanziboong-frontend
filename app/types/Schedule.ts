@@ -7,3 +7,8 @@ export interface Schedule {
   endAt: Dayjs;
   participantUserId: number[];
 }
+
+export interface ScheduleDetail extends Schedule {
+  id: number;
+  color: string;
+}

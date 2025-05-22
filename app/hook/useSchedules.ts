@@ -8,7 +8,7 @@ export const useSchedules = (year: number, month: number) => {
     queryKey: ['schedules', year, month],
     queryFn: async () => {
       const data = await scheduleApi.getSchedules(year, month);
-      return data?.content ?? [];
+      return data ?? [];
     },
   });
 };
