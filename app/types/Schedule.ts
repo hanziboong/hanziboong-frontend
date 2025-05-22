@@ -3,5 +3,5 @@ export interface Schedule {
   title: string;
   startAt: string;
   endAt: string;
-  memberId: number;
+  participantUserId: number[];
 }

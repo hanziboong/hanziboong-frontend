@@ -17,12 +17,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './ScheduleFormModal.style';
+import ParticipantSelector from '@/components/common/ParticipantSelector';
+import { Schedule } from '@/types/Schedule';
+import { useCreateSchedule } from '@/hook/useSchedules';
 
 interface ScheduleFormModalProps {
   visible: boolean;
   date: string;
   onClose: () => void;
-  onSubmit: (schedule: { title: string; date: string; start: Date; end: Date }) => void;
+  onSubmit: (schedule: Schedule) => void;
 }
 
 export default function ScheduleFormModal({
@@ -42,6 +45,22 @@ export default function ScheduleFormModal({
     return parsed.isValid() ? parsed.add(1, 'day').toDate() : new Date();
   });
 
+  // 목업 데이터
+  const members = [
+    { id: 1, nickName: '현지', houseId: 1 },
+    { id: 2, nickName: '민희', houseId: 1 },
+    { id: 3, nickName: '선영', houseId: 1 },
+  ];
+
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const createSchedule = useCreateSchedule();
+
+  // 선택 토글
+  const toggleSelection = (id: number) => {
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]));
+  };
+
+  // 날짜 선택시 시작, 종료 날짜 설정
   useEffect(() => {
     const parsed = dayjs(date);
     if (parsed.isValid()) {
@@ -50,15 +69,23 @@ export default function ScheduleFormModal({
     }
   }, [date]);
 
+  // 시작, 종료 날짜 선택 모달 표시
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
 
   // 제출 클릭 시
   const handleSubmit = () => {
-    if (onSubmit) {
-      onSubmit({ title, date, start, end });
-    }
+    const schedule = {
+      houseId: 1, // TODO: 홈 아이디 추가
+      title,
+      startAt: dayjs(start).toISOString(),
+      endAt: dayjs(end).toISOString(),
+      participantUserId: selectedIds,
+    };
+    createSchedule.mutate(schedule);
     setTitle('');
+    setSelectedIds([]);
+
     onClose();
   };
 
@@ -111,7 +138,6 @@ export default function ScheduleFormModal({
                     />
                   )}
                 </View>
-
                 <View style={styles.dateItem}>
                   <View style={styles.dateRow}>
                     <Text style={styles.dateLabel}>종료</Text>
@@ -135,6 +161,11 @@ export default function ScheduleFormModal({
                     />
                   )}
                 </View>
+                <ParticipantSelector
+                  members={members}
+                  selectedIds={selectedIds}
+                  onToggle={toggleSelection}
+                />
               </View>
             </SafeAreaView>
           </KeyboardAvoidingView>
