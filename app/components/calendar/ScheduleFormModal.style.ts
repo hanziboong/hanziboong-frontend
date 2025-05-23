@@ -94,13 +94,12 @@ const styles = StyleSheet.create({
   },
 
   dateButton: {
-    flex: 1,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    marginLeft: 8,
+    marginBottom: 12,
   },
 
   dateText: {

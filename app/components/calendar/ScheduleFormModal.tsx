@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './ScheduleFormModal.style';
 import ParticipantSelector from '@/components/common/ParticipantSelector';
+import { useCreateSchedule } from '@/hook/useSchedules';
 
 interface ScheduleFormModalProps {
   visible: boolean;
@@ -32,6 +33,7 @@ export default function ScheduleFormModal({ visible, date, onClose }: ScheduleFo
   const [isStartPickerVisible, setStartPickerVisible] = useState(false);
   const [isEndPickerVisible, setEndPickerVisible] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const { mutate: createSchedule } = useCreateSchedule();
 
   const members = [
     { id: 1, nickName: '현지', houseId: 1 },
@@ -51,6 +53,7 @@ export default function ScheduleFormModal({ visible, date, onClose }: ScheduleFo
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]));
   };
 
+  // 일정 등록
   const handleSubmit = () => {
     const schedule = {
       houseId: 1,
@@ -59,6 +62,7 @@ export default function ScheduleFormModal({ visible, date, onClose }: ScheduleFo
       endAt: dayjs(end),
       participantUserId: selectedIds,
     };
+    createSchedule(schedule);
     setTitle('');
     setSelectedIds([]);
     onClose();
@@ -97,6 +101,11 @@ export default function ScheduleFormModal({ visible, date, onClose }: ScheduleFo
                 <Text style={styles.dateText}>시작: {dayjs(start).format('YYYY-MM-DD HH:mm')}</Text>
               </TouchableOpacity>
 
+              {/* 종료 시간 선택 */}
+              <TouchableOpacity style={styles.dateButton} onPress={() => setEndPickerVisible(true)}>
+                <Text style={styles.dateText}>종료: {dayjs(end).format('YYYY-MM-DD HH:mm')}</Text>
+              </TouchableOpacity>
+
               <DateTimePickerModal
                 isVisible={isStartPickerVisible}
                 mode="datetime"
@@ -106,11 +115,6 @@ export default function ScheduleFormModal({ visible, date, onClose }: ScheduleFo
                 }}
                 onCancel={() => setStartPickerVisible(false)}
               />
-
-              {/* 종료 시간 선택 */}
-              <TouchableOpacity style={styles.dateButton} onPress={() => setEndPickerVisible(true)}>
-                <Text style={styles.dateText}>종료: {dayjs(end).format('YYYY-MM-DD HH:mm')}</Text>
-              </TouchableOpacity>
 
               <DateTimePickerModal
                 isVisible={isEndPickerVisible}
