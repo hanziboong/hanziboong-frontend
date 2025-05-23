@@ -25,15 +25,9 @@ interface ScheduleFormModalProps {
   visible: boolean;
   date: string;
   onClose: () => void;
-  onSubmit: (schedule: Schedule) => void;
 }
 
-export default function ScheduleFormModal({
-  visible,
-  date,
-  onClose,
-  onSubmit,
-}: ScheduleFormModalProps) {
+export default function ScheduleFormModal({ visible, date, onClose }: ScheduleFormModalProps) {
   const [title, setTitle] = useState('');
   const [start, setStart] = useState(() => {
     const parsed = dayjs(date);
@@ -152,7 +146,6 @@ export default function ScheduleFormModal({
                     <DateTimePicker
                       value={end}
                       mode="datetime"
-                      timeZoneName="short"
                       display={Platform.OS === 'ios' ? 'inline' : 'default'}
                       onChange={(e, selected) => {
                         setShowEnd(false);

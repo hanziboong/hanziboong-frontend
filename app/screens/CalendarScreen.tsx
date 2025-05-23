@@ -107,7 +107,6 @@ export default function CalendarScreen() {
         visible={formVisible}
         date={selectedDate}
         onClose={() => setFormVisible(false)}
-        onSubmit={() => {}}
       />
     </View>
   );
