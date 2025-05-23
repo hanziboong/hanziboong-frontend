@@ -45,3 +45,5 @@ yarn-error.*
 .env
 .env.development
 .env.production
+
+.idea/
