@@ -1,6 +1,6 @@
 // screens/RulesScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Rule } from '@/types/Rule';
@@ -14,7 +14,7 @@ import ConfirmModal from '@/components/rules/modal/ConfirmModal';
 
 export default function RulesScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { data: rules, isLoading, error } = useRules();
+  const { data: rules, isLoading } = useRules();
   const [manageModalVisible, setManageModalVisible] = useState(false);
   const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
   const [alarmModalVisible, setAlarmModalVisible] = useState(false);
@@ -48,28 +48,35 @@ export default function RulesScreen() {
           <Text style={styles.addButtonText}>규칙추가하기</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={rules}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => (
-          <View style={styles.card}>
-            <View style={styles.row}>
-              <Text style={styles.index}>{index + 1}</Text>
-              <View style={styles.content}>
-                <Text style={styles.title}>{item.title}</Text>
-                {!!item.description && <Text style={styles.description}>{item.description}</Text>}
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      ) : (
+        <FlatList
+          data={rules}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => (
+            <View style={styles.card}>
+              <View style={styles.row}>
+                <Text style={styles.index}>{index + 1}</Text>
+                <View style={styles.content}>
+                  <Text style={styles.title}>{item.title}</Text>
+                  {!!item.description && <Text style={styles.description}>{item.description}</Text>}
+                </View>
+                <TouchableOpacity onPress={() => handlePressAlarm(item)} style={styles.icon}>
+                  <Ionicons name="notifications-outline" size={20} color="gray" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handlePressMore(item)} style={styles.icon}>
+                  <Ionicons name="ellipsis-vertical" size={20} color="gray" />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity onPress={() => handlePressAlarm(item)} style={styles.icon}>
-                <Ionicons name="notifications-outline" size={20} color="gray" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handlePressMore(item)} style={styles.icon}>
-                <Ionicons name="ellipsis-vertical" size={20} color="gray" />
-              </TouchableOpacity>
             </View>
-          </View>
-        )}
-        ListEmptyComponent={<Text style={styles.emptyText}>규칙이 없습니다.</Text>}
-      />
+          )}
+          ListEmptyComponent={<Text style={styles.emptyText}>규칙이 없습니다.</Text>}
+        />
+      )}
+
       {selectedRule && (
         <ManageRuleModal
           visible={manageModalVisible}
@@ -125,8 +132,6 @@ export default function RulesScreen() {
         visible={confirmDeleteVisible}
         onCancel={() => setConfirmDeleteVisible(false)}
       />
-      {isLoading && <Text>Loading...</Text>}
-      {error && <Text>Error: {error.message}</Text>}
     </View>
   );
 }

@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
   },
 
   addButton: {
-    width: 100,
-    height: 30,
+    width: 120,
+    height: 40,
     backgroundColor: '#FFB338',
     paddingVertical: 6,
     paddingHorizontal: 12,
@@ -87,6 +87,11 @@ const styles = StyleSheet.create({
   addButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

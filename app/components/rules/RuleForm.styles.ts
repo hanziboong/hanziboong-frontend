@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16,
     height: 500,
+    textAlignVertical: 'top',
   },
 });
 
