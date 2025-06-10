@@ -26,7 +26,14 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-asset"],
-    "jsEngine": "hermes"
+    "plugins": [
+      "expo-asset"
+    ],
+    "jsEngine": "hermes",
+    "extra": {
+      "eas": {
+        "projectId": "c1c39168-545a-402d-bdd0-443dc6597ecf"
+      }
+    }
   }
 }

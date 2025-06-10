@@ -9,7 +9,7 @@ import { useCreateRule, useUpdateRule } from '@/hook/useRules';
 function HeaderRight({ onPress, label }: { onPress: () => void; label: string }) {
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPressIn={onPress}
       style={{
         width: 60,
         height: 30,
