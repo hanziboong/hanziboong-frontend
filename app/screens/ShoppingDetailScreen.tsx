@@ -33,9 +33,9 @@ export default function ShoppingDetailScreen() {
       ),
       headerStyle: {
         backgroundColor: 'white',
-        shadowColor: 'transparent', // iOS 그림자 제거
-        elevation: 0, // Android 그림자 제거
-        borderBottomWidth: 0, // 헤더 경계선 제거
+        shadowColor: 'transparent',
+        elevation: 0,
+        borderBottomWidth: 0,
       },
       headerTitleAlign: 'center',
     });

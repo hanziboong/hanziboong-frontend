@@ -4,7 +4,9 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 18,
+    paddingTop: 18,
   },
   contentContainer: {
     padding: 20,
@@ -16,22 +18,29 @@ export default StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    marginVertical: 12,
+    fontWeight: 600,
+    marginVertical: 16,
   },
   section: {
     marginVertical: 12,
   },
   label: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 12,
+    fontWeight: 400,
+    color: '#A3A3A3',
   },
   amount: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: 600,
     color: 'black',
-    alignSelf: 'flex-end',
+    textAlign: 'right',
+  },
+  boldLabel: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: 'black',
+    textAlign: 'right',
+    flex: 1,
   },
   grayText: {
     color: '#aaa',
@@ -45,8 +54,7 @@ export default StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginVertical: 6,
+    marginBottom: 16,
   },
   avatar: {
     width: 32,
@@ -56,7 +64,6 @@ export default StyleSheet.create({
   },
   name: {
     fontSize: 14,
-    flex: 1,
   },
   amountText: {
     fontWeight: 'bold',
@@ -85,15 +92,13 @@ export default StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: 'bold',
-    marginVertical: 12,
-    paddingHorizontal: 20,
+    fontWeight: 600,
+    marginVertical: 16,
   },
   participantRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
@@ -124,15 +129,15 @@ export default StyleSheet.create({
     padding: 12,
     fontSize: 14,
     minHeight: 80,
-    marginHorizontal: 20,
-    marginTop: 10,
     marginBottom: 20,
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   value: {
-    fontSize: 15,
+    fontSize: 16,
     color: '#222',
     flex: 1,
     textAlign: 'right',
-    marginRight: 20,
   },
 });

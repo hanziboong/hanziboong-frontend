@@ -4,14 +4,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useLayoutEffect } from 'react';
 import styles from './ExpenseDetailScreen.styles';
-import { ExpenseItemDetail } from '@/types/expense';
+import { useExpenseById } from '@/hook/useExpense';
+import { ExpenseParticipant } from '@/types/expense';
+import dayjs from 'dayjs';
 
 export default function ExpenseDetailScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { expense }: { expense: ExpenseItemDetail } = route.params as {
-    expense: ExpenseItemDetail;
-  };
+  const { id } = route.params as { id: number };
+  const { data: expense } = useExpenseById(id);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -19,41 +20,47 @@ export default function ExpenseDetailScreen() {
       headerTitleAlign: 'center',
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 16 }}>
-          <Ionicons name="chevron-back" size={24} color="black" />
+          <Ionicons name="chevron-back" size={24} color="#FFB338" />
         </TouchableOpacity>
       ),
       headerRight: () => (
         <TouchableOpacity style={{ marginRight: 16 }}>
-          <Ionicons name="ellipsis-vertical" size={20} color="black" />
+          <Ionicons name="ellipsis-vertical" size={20} color="#FFB338" />
         </TouchableOpacity>
       ),
+      headerStyle: {
+        backgroundColor: 'white',
+        shadowColor: 'transparent',
+        elevation: 0,
+        borderBottomWidth: 0,
+      },
     });
   }, [navigation]);
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>{expense.title}</Text>
+      <Text style={styles.title}>{expense?.title}</Text>
 
       <View style={styles.row}>
         <Text style={styles.label}>지출 비용</Text>
-        <Text style={styles.value}>- {expense.expenditure.toLocaleString()}원</Text>
+        <Text style={styles.boldLabel}>- {expense?.expenditure.toLocaleString()}원</Text>
       </View>
 
       <View style={styles.row}>
         <Text style={styles.label}>지출 일시</Text>
-        <Text style={styles.value}>{expense.spendAt}</Text>
+        <Text style={styles.value}>{dayjs(expense?.spendAt).format('MM.DD')}</Text>
       </View>
 
       <View style={styles.row}>
         <Text style={styles.label}>함께 지출한 메이트</Text>
         <Text style={styles.value}>
-          {expense.expenseParticipants.map((p) => p.nickName).join(', ')}
+          {expense?.expenseParticipants.map((p: ExpenseParticipant) => p.nickName).join(', ')}
         </Text>
       </View>
 
       <Text style={styles.sectionTitle}>정산 현황</Text>
 
-      {expense.expenseParticipants.map((p) => (
+      {expense?.expenseParticipants.map((p: ExpenseParticipant) => (
         <View key={p.id} style={styles.participantRow}>
           <View style={styles.participantInfo}>
             <Text style={styles.name}>{p.nickName}</Text>
@@ -67,7 +74,7 @@ export default function ExpenseDetailScreen() {
       ))}
 
       <Text style={styles.sectionTitle}>메모</Text>
-      <TextInput value={expense.memo} editable={false} multiline style={styles.memoBox} />
+      <TextInput value={expense?.memo} editable={false} multiline style={styles.memoBox} />
     </ScrollView>
   );
 }
