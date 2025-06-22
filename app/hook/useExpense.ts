@@ -40,3 +40,14 @@ export const useExpenseStatus = () => {
     },
   });
 };
+
+// 지출 삭제
+export const useDeleteExpense = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => expenseApi.deleteExpense(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses'] });
+    },
+  });
+};

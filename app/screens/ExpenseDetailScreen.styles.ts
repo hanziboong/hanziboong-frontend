@@ -140,4 +140,29 @@ export default StyleSheet.create({
     flex: 1,
     textAlign: 'right',
   },
+  menu: {
+    position: 'absolute',
+    top: -10,
+    right: 16,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+    width: 80,
+    zIndex: 100,
+  },
+  menuItem: {
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  menuText: {
+    fontSize: 14,
+    color: '#222',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#eee',
+  },
 });
