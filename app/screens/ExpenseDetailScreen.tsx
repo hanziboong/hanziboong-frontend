@@ -2,9 +2,10 @@
 import { View, Text, ScrollView, Switch, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from './ExpenseDetailScreen.styles';
-import { useExpenseById } from '@/hook/useExpense';
+import { useExpenseById, useExpenseStatus } from '@/hook/useExpense';
 import { ExpenseParticipant } from '@/types/expense';
 import dayjs from 'dayjs';
 
@@ -13,6 +14,42 @@ export default function ExpenseDetailScreen() {
   const route = useRoute();
   const { id } = route.params as { id: number };
   const { data: expense } = useExpenseById(id);
+  const { mutate: updateSettlement } = useExpenseStatus();
+
+  const [localSettledMap, setLocalSettledMap] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    if (expense?.expenseParticipants) {
+      const initialSettled: Record<number, boolean> = {};
+      expense.expenseParticipants.forEach((p: ExpenseParticipant) => {
+        initialSettled[p.id] = p.settled;
+      });
+      setLocalSettledMap(initialSettled);
+    }
+  }, [expense]);
+
+  // 정산 상태 토글
+  const toggleSettled = (participantId: number) => {
+    const prev = localSettledMap[participantId];
+    const next = !prev;
+
+    setLocalSettledMap((prevMap) => ({
+      ...prevMap,
+      [participantId]: next,
+    }));
+
+    updateSettlement(
+      { id: participantId, settled: next },
+      {
+        onError: () => {
+          setLocalSettledMap((prevMap) => ({
+            ...prevMap,
+            [participantId]: prev,
+          }));
+        },
+      },
+    );
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -69,7 +106,7 @@ export default function ExpenseDetailScreen() {
               {p.settled ? '정산완료' : '정산전'}
             </Text>
           </View>
-          <Switch value={p.settled} onValueChange={() => {}} />
+          <Switch value={localSettledMap[p.id]} onValueChange={() => toggleSettled(p.id)} />
         </View>
       ))}
 

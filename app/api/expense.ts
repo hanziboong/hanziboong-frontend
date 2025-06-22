@@ -33,7 +33,7 @@ export const updateExpense = async (id: number, expense: Expense) => {
 };
 
 // 개인 정산 유무 상태 변경
-export const updateIndividualSettlement = async (id: number) => {
-  const response = await instance.patch(`/api/expense/participant/${id}`);
+export const updateIndividualSettlement = async (id: number, settled: boolean) => {
+  const response = await instance.patch(`/api/expense/participant/${id}?isSettled=${settled}`);
   return response.data;
 };

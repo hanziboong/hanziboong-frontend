@@ -19,7 +19,7 @@ export default function ExpenseListItem({ expense, onPress }: ExpenseListItemPro
           {expense.expenseParticipants.map((p) => (
             <View key={p.id} style={styles.participant}>
               <Text style={styles.participantName}>{p.nickName}</Text>
-              <Ionicons name="checkmark" size={14} color="#FFB338" />
+              <Ionicons name="checkmark" size={14} color={p.settled ? '#FFB338' : '#ccc'} />
             </View>
           ))}
         </View>

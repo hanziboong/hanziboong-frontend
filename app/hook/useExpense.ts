@@ -28,3 +28,15 @@ export const useCreateExpense = () => {
     },
   });
 };
+
+// 지출 상태 토글
+export const useExpenseStatus = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, settled }: { id: number; settled: boolean }) =>
+      expenseApi.updateIndividualSettlement(id, settled),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses'] });
+    },
+  });
+};
