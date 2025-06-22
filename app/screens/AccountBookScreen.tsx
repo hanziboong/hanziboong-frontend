@@ -1,31 +1,21 @@
 import RentStatusCard from '@/components/accountBook/RentStatusCard';
 import ShoppingListCard from '@/components/accountBook/ShoppingListCard';
 import { useToBuy } from '@/hook/useToBuy';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { ToBuy } from '@/types/toBuy';
-import { useNavigation } from '@react-navigation/native';
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    gap: 16,
-    justifyContent: 'space-between',
-    height: 180,
-  },
-  cardWrapper: {
-    flex: 1,
-  },
-});
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '@/types/navigation';
+import styles from './AccountBookScreen.styles';
+import { Ionicons } from '@expo/vector-icons';
+import { useExpense } from '@/hook/useExpense';
+import ExpenseListItem from '@/components/accountBook/ExpenseListItem';
 
 export default function AccountBookScreen() {
   const { data: toBuyData } = useToBuy();
   const [toBuy, setToBuy] = useState<ToBuy[]>([]);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { data: expenses } = useExpense();
   useEffect(() => {
     setToBuy(toBuyData ?? []);
   }, [toBuyData]);
@@ -45,10 +35,33 @@ export default function AccountBookScreen() {
               checked: item.checked,
             }))}
             onPressMore={() => {
-              navigation.navigate('ShoppingDetail' as never);
+              navigation.navigate('ShoppingDetail');
             }}
           />
         </View>
+      </View>
+      <View style={styles.listWrapper}>
+        <Text style={styles.title}>공동 지출 내역</Text>
+        <FlatList
+          data={expenses}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => (
+            <ExpenseListItem
+              expense={item}
+              onPress={() => navigation.navigate('ExpenseDetailScreen', { id: item.id })}
+            />
+          )}
+        />
+
+        <TouchableOpacity
+          style={styles.floatingBtn}
+          onPress={() => {
+            // TODO: Navigate to ExpenseFormScreen when it's created
+            // navigation.navigate('ExpenseFormScreen');
+          }}
+        >
+          <Ionicons name="add" size={28} color="white" />
+        </TouchableOpacity>
       </View>
     </View>
   );

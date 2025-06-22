@@ -2,10 +2,12 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#F7F7F7',
+    backgroundColor: '#ffffff',
     borderRadius: 12,
     padding: 16,
     height: '100%',
+    borderWidth: 1,
+    borderColor: '#FFB338',
   },
 
   header: {
@@ -27,6 +29,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
+    gap: 8,
   },
   checkCircle: {
     width: 16,

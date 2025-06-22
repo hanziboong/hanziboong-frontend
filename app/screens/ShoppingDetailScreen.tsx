@@ -20,7 +20,7 @@ export default function ShoppingDetailScreen() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: () => <Text style={{ fontSize: 18, fontWeight: 'bold' }}>사야 할 물건</Text>,
+      headerTitle: () => <Text style={{ fontSize: 18, fontWeight: 500 }}>사야 할 물건</Text>,
       headerRight: () => (
         <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginRight: 16 }}>
           <Ionicons name="add" size={24} color="#FFB338" />

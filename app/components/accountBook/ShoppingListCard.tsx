@@ -1,7 +1,7 @@
 // components/accountBook/ShoppingListCard.tsx
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import styles from './ShoppingListCard.styles';
 
 interface ShoppingItem {
@@ -41,8 +41,19 @@ export default function ShoppingListCard({ items, onPressMore }: ShoppingListCar
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.itemRow}>
-              <View style={[styles.checkCircle, item.checked && styles.checkedCircle]} />
-              <Text style={item.checked ? styles.checkedText : styles.itemText}>{item.name}</Text>
+              <Ionicons
+                name={item.checked ? 'checkbox' : 'square-outline'}
+                size={24}
+                color={item.checked ? '#FFB338' : '#ccc'}
+              />
+              <Text
+                style={[
+                  styles.itemText,
+                  item.checked && { textDecorationLine: 'line-through', color: '#999' },
+                ]}
+              >
+                {item.name}
+              </Text>
             </View>
           )}
         />
