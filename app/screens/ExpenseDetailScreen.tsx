@@ -10,7 +10,8 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '@/types/navigation';
 import { useLayoutEffect, useState } from 'react';
 import { useEffect } from 'react';
 import styles from './ExpenseDetailScreen.styles';
@@ -19,9 +20,10 @@ import { ExpenseParticipant } from '@/types/expense';
 import dayjs from 'dayjs';
 
 export default function ExpenseDetailScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute();
   const { id } = route.params as { id: number };
+
   const { data: expense } = useExpenseById(id);
   const { mutate: updateSettlement } = useExpenseStatus();
   const { mutate: deleteExpense } = useDeleteExpense();
@@ -31,6 +33,32 @@ export default function ExpenseDetailScreen() {
   const menuToggle = () => {
     setIsMenuVisible(!isMenuVisible);
   };
+
+  useEffect(() => {
+    if (isDeleteConfirmVisible) {
+      Alert.alert(
+        '삭제 확인',
+        '정말로 이 지출 내역을 삭제하시겠습니까?',
+        [
+          {
+            text: '취소',
+            onPress: () => setIsDeleteConfirmVisible(false),
+            style: 'cancel',
+          },
+          {
+            text: '삭제',
+            onPress: () => {
+              setIsDeleteConfirmVisible(false);
+              deleteExpense(id);
+              navigation.goBack();
+            },
+            style: 'destructive',
+          },
+        ],
+        { cancelable: true },
+      );
+    }
+  }, [isDeleteConfirmVisible, deleteExpense, id, navigation]);
 
   useEffect(() => {
     if (expense?.expenseParticipants) {
@@ -130,7 +158,12 @@ export default function ExpenseDetailScreen() {
       {isMenuVisible && (
         <TouchableWithoutFeedback onPress={() => setIsMenuVisible(false)}>
           <View style={styles.menu}>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                navigation.navigate('ExpenseFormScreen', { id, isEdit: true });
+              }}
+            >
               <Text style={styles.menuText}>수정</Text>
             </TouchableOpacity>
             <View style={styles.divider} />
@@ -146,29 +179,6 @@ export default function ExpenseDetailScreen() {
           </View>
         </TouchableWithoutFeedback>
       )}
-
-      {isDeleteConfirmVisible &&
-        Alert.alert(
-          '삭제 확인',
-          '정말로 이 지출 내역을 삭제하시겠습니까?',
-          [
-            {
-              text: '취소',
-              onPress: () => setIsDeleteConfirmVisible(false),
-              style: 'cancel',
-            },
-            {
-              text: '삭제',
-              onPress: () => {
-                setIsDeleteConfirmVisible(false);
-                deleteExpense(id);
-                navigation.goBack();
-              },
-              style: 'destructive',
-            },
-          ],
-          { cancelable: true },
-        )}
     </ScrollView>
   );
 }

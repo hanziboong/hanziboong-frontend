@@ -10,6 +10,7 @@ import styles from './AccountBookScreen.styles';
 import { Ionicons } from '@expo/vector-icons';
 import { useExpense } from '@/hook/useExpense';
 import ExpenseListItem from '@/components/accountBook/ExpenseListItem';
+import FloatingAddButton from '@/components/calendar/FloatingAddButton';
 
 export default function AccountBookScreen() {
   const { data: toBuyData } = useToBuy();
@@ -53,15 +54,9 @@ export default function AccountBookScreen() {
           )}
         />
 
-        <TouchableOpacity
-          style={styles.floatingBtn}
-          onPress={() => {
-            // TODO: Navigate to ExpenseFormScreen when it's created
-            // navigation.navigate('ExpenseFormScreen');
-          }}
-        >
-          <Ionicons name="add" size={28} color="white" />
-        </TouchableOpacity>
+        <FloatingAddButton
+          onPress={() => navigation.navigate('ExpenseFormScreen', { id: 0, isEdit: false })}
+        />
       </View>
     </View>
   );

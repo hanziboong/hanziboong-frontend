@@ -6,4 +6,5 @@ export type RootStackParamList = {
   RuleFormScreen: { mode: 'edit' | 'add'; rule?: Rule };
   ShoppingDetail: undefined;
   ExpenseDetailScreen: { id: number };
+  ExpenseFormScreen: { id: number; isEdit: boolean };
 };

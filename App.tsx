@@ -7,6 +7,7 @@ import { RootStackParamList } from '@/types/navigation';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ShoppingDetailScreen from '@/screens/ShoppingDetailScreen';
 import ExpenseDetailScreen from '@/screens/ExpenseDetailScreen';
+import ExpenseFormScreen from '@/screens/ExpenseFormScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const queryClient = new QueryClient();
@@ -34,6 +35,11 @@ export default function App() {
             name="ExpenseDetailScreen"
             component={ExpenseDetailScreen}
             options={{ title: '지출 상세보기', headerBackTitle: '' }}
+          />
+          <Stack.Screen
+            name="ExpenseFormScreen"
+            component={ExpenseFormScreen}
+            options={{ title: '지출 등록', headerBackTitle: '' }}
           />
         </Stack.Navigator>
       </NavigationContainer>
