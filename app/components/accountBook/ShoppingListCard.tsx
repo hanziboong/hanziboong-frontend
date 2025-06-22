@@ -24,12 +24,13 @@ export default function ShoppingListCard({ items, onPressMore }: ShoppingListCar
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>사야할 물건</Text>
-        <TouchableOpacity onPress={onPressMore}>
+      <TouchableOpacity onPress={onPressMore}>
+        <View style={styles.header}>
+          <Text style={styles.title}>사야할 물건</Text>
+
           <Feather name="chevron-right" size={20} color="#999" />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
 
       {sorted.length === 0 ? (
         <Text style={styles.empty}>모든 항목을 완료했어요!</Text>

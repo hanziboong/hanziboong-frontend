@@ -1,5 +1,5 @@
 export interface ToBuy {
   id: number;
-  item: string;
+  name: string;
   checked: boolean;
 }

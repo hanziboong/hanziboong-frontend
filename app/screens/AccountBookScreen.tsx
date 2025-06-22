@@ -4,6 +4,7 @@ import { useToBuy } from '@/hook/useToBuy';
 import { View, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
 import { ToBuy } from '@/types/toBuy';
+import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,6 +25,7 @@ const styles = StyleSheet.create({
 export default function AccountBookScreen() {
   const { data: toBuyData } = useToBuy();
   const [toBuy, setToBuy] = useState<ToBuy[]>([]);
+  const navigation = useNavigation();
   useEffect(() => {
     setToBuy(toBuyData ?? []);
   }, [toBuyData]);
@@ -39,10 +41,12 @@ export default function AccountBookScreen() {
           <ShoppingListCard
             items={toBuy.map((item) => ({
               id: item.id,
-              name: item.item,
+              name: item.name,
               checked: item.checked,
             }))}
-            onPressMore={() => {}}
+            onPressMore={() => {
+              navigation.navigate('ShoppingDetail' as never);
+            }}
           />
         </View>
       </View>
