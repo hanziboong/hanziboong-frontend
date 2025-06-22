@@ -50,7 +50,7 @@ export default function RulesScreen() {
       </View>
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#FFB338" />
         </View>
       ) : (
         <FlatList

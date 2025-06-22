@@ -1,6 +1,6 @@
 export interface Member {
   id: number;
-  nickName: string;
+  nickname: string;
   houseId: number;
 }
 

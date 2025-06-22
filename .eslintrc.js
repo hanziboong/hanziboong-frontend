@@ -41,5 +41,6 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/no-unstable-nested-components': ['warn', { allowAsProps: true }],
     'no-constant-condition': 'off',
+    'import/prefer-default-export': 'off',
   },
 };

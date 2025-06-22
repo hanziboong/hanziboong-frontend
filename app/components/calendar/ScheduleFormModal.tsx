@@ -19,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './ScheduleFormModal.style';
 import ParticipantSelector from '@/components/common/ParticipantSelector';
 import { useCreateSchedule } from '@/hook/useSchedules';
+import { useHouseMembers } from '@/hook/useHouse';
 
 interface ScheduleFormModalProps {
   visible: boolean;
@@ -35,11 +36,7 @@ export default function ScheduleFormModal({ visible, date, onClose }: ScheduleFo
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { mutate: createSchedule } = useCreateSchedule();
 
-  const members = [
-    { id: 1, nickName: '현지', houseId: 1 },
-    { id: 2, nickName: '민희', houseId: 1 },
-    { id: 3, nickName: '선영', houseId: 1 },
-  ];
+  const { data: members } = useHouseMembers();
 
   useEffect(() => {
     const parsed = dayjs(date);

@@ -5,6 +5,7 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
 import RuleForm, { RuleFormRef } from '@/components/rules/RuleForm';
 import { useCreateRule, useUpdateRule } from '@/hook/useRules';
+import { Ionicons } from '@expo/vector-icons';
 
 function HeaderRight({ onPress, label }: { onPress: () => void; label: string }) {
   return (
@@ -56,6 +57,12 @@ export default function RuleFormScreen() {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => <HeaderRight onPress={handleSubmit} label={isEdit ? '수정' : '등록'} />,
+
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 16 }}>
+          <Ionicons name="chevron-back" size={24} color="#FFB338" />
+        </TouchableOpacity>
+      ),
     });
   }, [navigation, isEdit, handleSubmit]);
 
