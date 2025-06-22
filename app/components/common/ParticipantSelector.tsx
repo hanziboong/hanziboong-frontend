@@ -35,7 +35,7 @@ export default function ParticipantSelector({
               {isSelected && <Ionicons name="checkmark" size={16} color="white" />}
             </View>
             <Text style={[styles.name, member.disabled && styles.disabledText]}>
-              {member.nickName}
+              {member.nickname}
             </Text>
           </TouchableOpacity>
         );
